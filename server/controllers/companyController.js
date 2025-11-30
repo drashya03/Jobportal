@@ -5,7 +5,6 @@ import generateToken from "../utils/generateToken.js";
 import Job from "../models/Job.js";
 import JobApplication from "../models/JobApplication.js";
 
-// Register a new company
 export const registerCompany = async (req, res) => {
 
     const { name, email, password } = req.body
@@ -52,7 +51,6 @@ export const registerCompany = async (req, res) => {
     }
 }
 
-// Login Company
 export const loginCompany = async (req, res) => {
 
     const { email, password } = req.body
@@ -85,7 +83,6 @@ export const loginCompany = async (req, res) => {
 
 }
 
-// Get Company Data
 export const getCompanyData = async (req, res) => {
 
     try {
@@ -102,7 +99,6 @@ export const getCompanyData = async (req, res) => {
 
 }
 
-// Post New Job
 export const postJob = async (req, res) => {
 
     const { title, description, location, salary, level, category } = req.body
@@ -135,13 +131,11 @@ export const postJob = async (req, res) => {
 
 }
 
-// Get Company Job Applicants
 export const getCompanyJobApplicants = async (req, res) => {
     try {
 
         const companyId = req.company._id
 
-        // Find job applications for the user and populate related data
         const applications = await JobApplication.find({ companyId })
             .populate('userId', 'name image resume')
             .populate('jobId', 'title location category level salary')
@@ -154,7 +148,6 @@ export const getCompanyJobApplicants = async (req, res) => {
     }
 }
 
-// Get Company Posted Jobs
 export const getCompanyPostedJobs = async (req, res) => {
     try {
 
@@ -162,7 +155,6 @@ export const getCompanyPostedJobs = async (req, res) => {
 
         const jobs = await Job.find({ companyId })
 
-        // Adding No. of applicants info in data
         const jobsData = await Promise.all(jobs.map(async (job) => {
             const applicants = await JobApplication.find({ jobId: job._id });
             return { ...job.toObject(), applicants: applicants.length }
@@ -175,14 +167,12 @@ export const getCompanyPostedJobs = async (req, res) => {
     }
 }
 
-// Change Job Application Status
 export const ChangeJobApplicationsStatus = async (req, res) => {
 
     try {
 
         const { id, status } = req.body
 
-        // Find Job application and update status
         await JobApplication.findOneAndUpdate({ _id: id }, { status })
 
         res.json({ success: true, message: 'Status Changed' })
@@ -194,7 +184,6 @@ export const ChangeJobApplicationsStatus = async (req, res) => {
     }
 }
 
-// Change Job Visiblity
 export const changeVisiblity = async (req, res) => {
     try {
 

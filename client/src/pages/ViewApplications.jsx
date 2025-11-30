@@ -11,7 +11,6 @@ const ViewApplications = () => {
 
   const [applicants, setApplicants] = useState(false)
 
-  // Function to fetch company Job Applications data 
   const fetchCompanyJobApplications = async () => {
 
     try {
@@ -32,7 +31,6 @@ const ViewApplications = () => {
 
   }
 
-  // Function to Update Job Applications Status 
   const changeJobApplicationStatus = async (id, status) => {
     try {
 

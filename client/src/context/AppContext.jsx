@@ -29,7 +29,6 @@ export const AppContextProvider = (props) => {
     const [userData, setUserData] = useState(null)
     const [userApplications, setUserApplications] = useState([])
 
-    // Function to Fetch Jobs 
     const fetchJobs = async () => {
         try {
 
@@ -46,7 +45,6 @@ export const AppContextProvider = (props) => {
         }
     }
 
-    // Function to Fetch Company Data
     const fetchCompanyData = async () => {
         try {
 
@@ -63,7 +61,6 @@ export const AppContextProvider = (props) => {
         }
     }
 
-    // Function to Fetch User Data
     const fetchUserData = async () => {
         try {
 
@@ -83,7 +80,6 @@ export const AppContextProvider = (props) => {
         }
     }
 
-    // Function to Fetch User's Applied Applications
     const fetchUserApplications = async () => {
         try {
 
@@ -115,14 +111,12 @@ export const AppContextProvider = (props) => {
 
     }, [])
 
-    // Fetch Company Data if Company Token is Available
     useEffect(() => {
         if (companyToken) {
             fetchCompanyData()
         }
     }, [companyToken])
 
-    // Fetch User's Applications & Data if User is Logged In
     useEffect(() => {
         if (user) {
             fetchUserData()

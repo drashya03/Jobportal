@@ -3,7 +3,6 @@ import JobApplication from "../models/JobApplication.js"
 import User from "../models/User.js"
 import { v2 as cloudinary } from "cloudinary"
 
-// Get User Data
 export const getUserData = async (req, res) => {
 
     const userId = req.auth.userId
@@ -24,8 +23,6 @@ export const getUserData = async (req, res) => {
 
 }
 
-
-// Apply For Job
 export const applyForJob = async (req, res) => {
 
     const { jobId } = req.body
@@ -61,7 +58,6 @@ export const applyForJob = async (req, res) => {
 
 }
 
-// Get User Applied Applications Data
 export const getUserJobApplications = async (req, res) => {
 
     try {
@@ -85,7 +81,6 @@ export const getUserJobApplications = async (req, res) => {
 
 }
 
-// Update User Resume
 export const updateUserResume = async (req, res) => {
     try {
 

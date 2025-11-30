@@ -48,7 +48,6 @@ const AddJob = () => {
 
 
     useEffect(() => {
-        // Initiate Qill only once
         if (!quillRef.current && editorRef.current) {
             quillRef.current = new Quill(editorRef.current, {
                 theme: 'snow',

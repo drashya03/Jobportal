@@ -1,8 +1,5 @@
 import Job from "../models/Job.js"
 
-
-
-// Get All Jobs
 export const getJobs = async (req, res) => {
     try {
 
@@ -16,7 +13,6 @@ export const getJobs = async (req, res) => {
     }
 }
 
-// Get Single Job Using JobID
 export const getJobById = async (req, res) => {
     try {
 

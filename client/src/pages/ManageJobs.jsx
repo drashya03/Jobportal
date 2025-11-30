@@ -14,7 +14,6 @@ const ManageJobs = () => {
 
   const { backendUrl, companyToken } = useContext(AppContext)
 
-  // Function to fetch company Job Applications data 
   const fetchCompanyJobs = async () => {
 
     try {
@@ -35,7 +34,6 @@ const ManageJobs = () => {
 
   }
 
-  // Function to change Job Visibility 
   const changeJobVisiblity = async (id) => {
 
     try {
