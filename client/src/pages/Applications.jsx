@@ -4,20 +4,16 @@ import { assets } from '../assets/assets'
 import moment from 'moment'
 import Footer from '../components/Footer'
 import { AppContext } from '../context/AppContext'
-import { useAuth, useUser } from '@clerk/clerk-react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import Loading from '../components/Loading'
 
 const Applications = () => {
 
-  const { user } = useUser()
-  const { getToken } = useAuth()
-
   const [isEdit, setIsEdit] = useState(false)
   const [resume, setResume] = useState(null)
 
-  const { backendUrl, userData, userApplications, fetchUserData, fetchUserApplications } = useContext(AppContext)
+  const { backendUrl, userToken, userData, userApplications, fetchUserData, fetchUserApplications } = useContext(AppContext)
 
   const updateResume = async () => {
 
@@ -26,11 +22,9 @@ const Applications = () => {
       const formData = new FormData()
       formData.append('resume', resume)
 
-      const token = await getToken()
-
       const { data } = await axios.post(backendUrl + '/api/users/update-resume',
         formData,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${userToken}` } }
       )
 
       if (data.success) {
@@ -49,10 +43,10 @@ const Applications = () => {
   }
 
   useEffect(() => {
-    if (user) {
+    if (userToken) {
       fetchUserApplications()
     }
-  }, [user])
+  }, [userToken])
 
   return userData ? (
     <>
