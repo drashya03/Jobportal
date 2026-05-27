@@ -10,20 +10,17 @@ import JobCard from '../components/JobCard'
 import Footer from '../components/Footer'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { useAuth } from '@clerk/clerk-react'
 
 const ApplyJob = () => {
 
   const { id } = useParams()
-
-  const { getToken } = useAuth()
 
   const navigate = useNavigate()
 
   const [JobData, setJobData] = useState(null)
   const [isAlreadyApplied, setIsAlreadyApplied] = useState(false)
 
-  const { jobs, backendUrl, userData, userApplications, fetchUserApplications } = useContext(AppContext)
+  const { jobs, backendUrl, userToken, userData, userApplications, fetchUserApplications, setShowUserLogin } = useContext(AppContext)
 
   const fetchJob = async () => {
 
@@ -47,6 +44,7 @@ const ApplyJob = () => {
     try {
 
       if (!userData) {
+        setShowUserLogin(true)
         return toast.error('Login to apply for jobs')
       }
 
@@ -55,11 +53,9 @@ const ApplyJob = () => {
         return toast.error('Upload resume to apply')
       }
 
-      const token = await getToken()
-
       const { data } = await axios.post(backendUrl + '/api/users/apply',
         { jobId: JobData._id },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${userToken}` } }
       )
 
       if (data.success) {

@@ -1,16 +1,12 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useAuth, useUser } from "@clerk/clerk-react";
 
 export const AppContext = createContext()
 
 export const AppContextProvider = (props) => {
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL
-
-    const { user } = useUser()
-    const { getToken } = useAuth()
 
     const [searchFilter, setSearchFilter] = useState({
         title: '',
@@ -22,10 +18,12 @@ export const AppContextProvider = (props) => {
     const [jobs, setJobs] = useState([])
 
     const [showRecruiterLogin, setShowRecruiterLogin] = useState(false)
+    const [showUserLogin, setShowUserLogin] = useState(false)
 
     const [companyToken, setCompanyToken] = useState(null)
     const [companyData, setCompanyData] = useState(null)
 
+    const [userToken, setUserToken] = useState(null)
     const [userData, setUserData] = useState(null)
     const [userApplications, setUserApplications] = useState([])
 
@@ -64,16 +62,16 @@ export const AppContextProvider = (props) => {
     const fetchUserData = async () => {
         try {
 
-            const token = await getToken();
+            if (!userToken) return;
 
             const { data } = await axios.get(backendUrl + '/api/users/user',
-                { headers: { Authorization: `Bearer ${token}` } })
+                { headers: { Authorization: `Bearer ${userToken}` } })
 
             if (data.success) {
                 setUserData(data.user)
-            } else (
+            } else {
                 toast.error(data.message)
-            )
+            }
 
         } catch (error) {
             toast.error(error.message)
@@ -83,10 +81,10 @@ export const AppContextProvider = (props) => {
     const fetchUserApplications = async () => {
         try {
 
-            const token = await getToken()
+            if (!userToken) return;
 
             const { data } = await axios.get(backendUrl + '/api/users/applications',
-                { headers: { Authorization: `Bearer ${token}` } }
+                { headers: { Authorization: `Bearer ${userToken}` } }
             )
             if (data.success) {
                 setUserApplications(data.applications)
@@ -99,14 +97,26 @@ export const AppContextProvider = (props) => {
         }
     }
 
-    // Retrive Company Token From LocalStorage
+    const logoutUser = () => {
+        setUserToken(null)
+        setUserData(null)
+        setUserApplications([])
+        localStorage.removeItem('userToken')
+        toast.success('Logged out successfully')
+    }
+
+    // Retrive Tokens From LocalStorage
     useEffect(() => {
         fetchJobs()
 
         const storedCompanyToken = localStorage.getItem('companyToken')
-
         if (storedCompanyToken) {
             setCompanyToken(storedCompanyToken)
+        }
+
+        const storedUserToken = localStorage.getItem('userToken')
+        if (storedUserToken) {
+            setUserToken(storedUserToken)
         }
 
     }, [])
@@ -118,25 +128,27 @@ export const AppContextProvider = (props) => {
     }, [companyToken])
 
     useEffect(() => {
-        if (user) {
+        if (userToken) {
             fetchUserData()
             fetchUserApplications()
         }
-    }, [user])
+    }, [userToken])
 
     const value = {
         setSearchFilter, searchFilter,
         isSearched, setIsSearched,
         jobs, setJobs,
         showRecruiterLogin, setShowRecruiterLogin,
+        showUserLogin, setShowUserLogin,
         companyToken, setCompanyToken,
         companyData, setCompanyData,
         backendUrl,
+        userToken, setUserToken,
         userData, setUserData,
         userApplications, setUserApplications,
         fetchUserData,
         fetchUserApplications,
-
+        logoutUser
     }
 
     return (<AppContext.Provider value={value}>
